@@ -12,14 +12,19 @@ object Main extends App {
     "jdbc:sqlserver://localhost:1401;database=master;user=sa;password=Vaskir2010"
   )
 
-  case class Person(name: String, age: Int)
+  val y = xa.yolo
+  import y._
 
-  val res =
-    sql"select name, age from dbo.people"
-      .query[String :: Int :: HNil]
-      .to[List]
-      .transact(xa)
-      .unsafeRunSync
+  val age = 21.toByte
+
+  val q = sql"""select name, age from dbo.people where age = $age""".query[(String, Byte)]
+
+  q.check.unsafeRunSync
+
+    val res =
+    q.stream
+     .quick
+     .unsafeRunSync
 
   println(res)
 }
